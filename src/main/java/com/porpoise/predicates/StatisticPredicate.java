@@ -21,7 +21,11 @@ public class StatisticPredicate<T> implements Predicate<T> {
 	}
 
 	public StatisticPredicate(final List<Predicate<T>> tests) {
-		this.testFunction = new StatisticFunction<T>(tests);
+		this(new StatisticFunction<T>(tests));
+	}
+
+	private StatisticPredicate(final StatisticFunction<T> f) {
+		this.testFunction = f;
 	}
 
 	@Override
@@ -34,7 +38,6 @@ public class StatisticPredicate<T> implements Predicate<T> {
 	public StatisticPredicate<T> reorder() {
 		final List<StatisticResult> copy = Lists.newArrayList(this.results);
 		Collections.sort(copy);
-		// new StatisticPredicate<T>(copy);
-		return null;
+		return new StatisticPredicate<T>(this.testFunction.reorder(copy));
 	}
 }
